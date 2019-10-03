@@ -6,9 +6,9 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Before
 import org.junit.Test
-import xyz.byxor.nfabot.DiscordService
-import xyz.byxor.nfabot.events.core.EventPublisher
-import xyz.byxor.nfabot.events.discord.MessageEvent
+import xyz.byxor.nfabot.core.ChatService
+import xyz.byxor.nfabot.core.EventPublisher
+import xyz.byxor.nfabot.discord.events.MessageEvent
 import xyz.byxor.nfabot.features.PingPong
 
 class APingPongFeature {
@@ -34,22 +34,22 @@ class APingPongFeature {
     }
 
     private fun thenTheBotSays(message: String) {
-        verify(discordService).sendMessage(message)
+        verify(chatService).sendMessage(message)
     }
 
     private fun thenTheBotSaysNothing() {
-        verify(discordService, never()).sendMessage(any())
+        verify(chatService, never()).sendMessage(any())
     }
 
     private fun configureMocks() {
-        discordService = mock()
-        pingPongFeature = PingPong(discordService)
+        chatService = mock()
+        pingPongFeature = PingPong(chatService)
 
         messageEventPublisher = EventPublisher<MessageEvent>()
         messageEventPublisher.subscribe(pingPongFeature)
     }
 
-    private lateinit var discordService: DiscordService
+    private lateinit var chatService: ChatService
     private lateinit var messageEventPublisher: EventPublisher<MessageEvent>
     private lateinit var pingPongFeature: PingPong
 }
