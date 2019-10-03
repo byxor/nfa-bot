@@ -1,5 +1,5 @@
 package xyz.byxor.nfabot
 
 fun main() {
-    println("Hello, World!")
+    println("Hello! I haven't been fully written yet, but check out my features in the code!")
 }
