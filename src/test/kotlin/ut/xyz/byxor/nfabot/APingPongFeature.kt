@@ -17,18 +17,30 @@ class APingPongFeature {
 
     @Test
     fun `Should reply with "Pong!" when "Ping!" is said in the chat`() {
-        eventPublisher.pushMessageEvent("Ping!")
-        verify(discordService).sendMessage("Pong!")
+        whenSomebodySays("Ping!")
+        thenTheBotSays("Pong!")
     }
 
     @Test
     fun `Should not reply to any other messages`() {
-        eventPublisher.pushMessageEvent("Don't talk to me...")
+        whenSomebodySays("Don't talk to me...")
+        thenTheBotSaysNothing()
+    }
+
+    private fun whenSomebodySays(message: String) {
+        eventPublisher.pushMessageEvent(message)
+    }
+
+    private fun thenTheBotSays(message: String) {
+        verify(discordService).sendMessage(message)
+    }
+
+    private fun thenTheBotSaysNothing() {
         verify(discordService, never()).sendMessage(any())
     }
 
     private fun configureMocks() {
-        discordService = mock<DiscordService>()
+        discordService = mock()
         pingPongFeature = PingPong(discordService)
 
         eventPublisher = DiscordEventPublisher()
