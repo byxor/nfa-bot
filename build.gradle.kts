@@ -17,8 +17,10 @@ repositories {
 }
 
 dependencies {
-    testCompile("junit", "junit", "4.12")
     implementation(kotlin("stdlib-jdk8"))
+
+    testCompile("junit", "junit", "4.12")
+    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
 }
 
 application {
