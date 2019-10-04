@@ -1,4 +1,4 @@
-package xyz.byxor.nfabot.core
+package xyz.byxor.nfabot.events
 
 class EventPublisher<Event> {
     fun subscribe(subscriber: EventSubscriber<Event>) {

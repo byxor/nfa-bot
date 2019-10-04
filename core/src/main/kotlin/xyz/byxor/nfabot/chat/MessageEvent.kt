@@ -1,4 +1,4 @@
-package xyz.byxor.nfabot.discord.events
+package xyz.byxor.nfabot.chat
 
 data class MessageEvent(
         val message: String

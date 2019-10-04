@@ -1,4 +1,4 @@
-package xyz.byxor.nfabot.core
+package xyz.byxor.nfabot.chat
 
 interface ChatService {
     fun sendMessage(message: String)
