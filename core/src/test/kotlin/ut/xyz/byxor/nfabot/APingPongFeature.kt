@@ -6,7 +6,7 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Before
 import org.junit.Test
-import xyz.byxor.nfabot.core.ChatService
+import xyz.byxor.nfabot.chat.ChatService
 import xyz.byxor.nfabot.events.EventPublisher
 import xyz.byxor.nfabot.chat.MessageEvent
 import xyz.byxor.nfabot.features.PingPong
