@@ -4,11 +4,25 @@ A discord bot for the THPS community in NFA (No Fun Allowed)
 
 ### To run the bot:
 
-`./gradlew clean run`
+```
+./gradlew clean run
+```
 
 ### To run the tests:
 
-`./gradlew clean test`
+```
+./gradlew clean test
+```
+
+### To build an executable JAR file:
+
+```
+./gradlew clean build
+```
+
+```
+java -jar discord/build/libs/NFA_Bot_Discord.jar
+```
 
 ### Current features:
 
