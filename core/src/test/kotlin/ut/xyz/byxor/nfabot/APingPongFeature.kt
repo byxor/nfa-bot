@@ -30,7 +30,7 @@ class APingPongFeature {
     }
 
     private fun whenSomebodySays(message: String) {
-        val messageEvent = MessageEvent(message)
+        val messageEvent = MessageEvent(message, "")
         chatEventPublishers.messages.publish(messageEvent)
     }
 

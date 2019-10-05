@@ -1,5 +1,8 @@
 package ut.xyz.byxor.nfabot
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.verify
 import org.junit.Before
 import org.junit.Test
 import xyz.byxor.nfabot.chat.ChatEventPublishers
@@ -18,14 +21,24 @@ class AThugProPlusFeature {
         thenTheBotMessageContains("https://")
     }
 
+    @Test
+    fun `Should not repond to any other messages`() {
+        whenSomebodySays("Don't talk to me")
+        thenTheBotSaysNothing()
+    }
+
     private fun whenSomebodySays(message: String) {
-        val messageEvent = MessageEvent(message)
+        val messageEvent = MessageEvent(message, "")
         chatEventPublishers.messages.publish(messageEvent)
     }
 
     private fun thenTheBotMessageContains(expectedMessage: String) {
         val message = chatService.message
         assert(message.contains(expectedMessage))
+    }
+
+    private fun thenTheBotSaysNothing() {
+        assert(chatService.message == "")
     }
 
     private fun configureMocks() {

@@ -10,10 +10,11 @@ class DiscordEventListener(
 ) : ListenerAdapter() {
 
     override fun onMessageReceived(discordEvent: MessageReceivedEvent) {
+        val messageAuthor = discordEvent.message.author.name
         val messageText = discordEvent.message.contentRaw
-        println("Message Received: $messageText")
+        println("$messageAuthor: $messageText")
 
-        val messageEvent = MessageEvent(messageText)
+        val messageEvent = MessageEvent(messageText, messageAuthor)
         chatEventPublishers.messages.publish(messageEvent)
     }
 }
