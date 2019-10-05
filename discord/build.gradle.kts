@@ -14,7 +14,7 @@ dependencies {
 }
 
 application {
-    mainClassName = "xyz.byxor.nfabot.ApplicationKt"
+    mainClassName = "xyz.byxor.nfabot.MainKt"
 }
 
 tasks.withType<KotlinCompile> {

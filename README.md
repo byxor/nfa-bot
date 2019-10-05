@@ -5,8 +5,10 @@ A discord bot for the THPS community in NFA (No Fun Allowed)
 ### To run the bot:
 
 ```
-./gradlew clean run
+./gradlew clean run --args '<discordBotToken>'
 ```
+
+* You must replace `<discordBotToken>` with a real discord token.
 
 ### To run the tests:
 

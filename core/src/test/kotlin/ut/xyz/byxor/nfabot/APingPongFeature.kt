@@ -6,10 +6,11 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Before
 import org.junit.Test
+import xyz.byxor.nfabot.chat.ChatEventPublishers
 import xyz.byxor.nfabot.chat.ChatService
-import xyz.byxor.nfabot.events.EventPublisher
 import xyz.byxor.nfabot.chat.MessageEvent
-import xyz.byxor.nfabot.features.PingPong
+import xyz.byxor.nfabot.features.Feature
+import xyz.byxor.nfabot.features.PingPongFeature
 
 class APingPongFeature {
 
@@ -30,7 +31,7 @@ class APingPongFeature {
 
     private fun whenSomebodySays(message: String) {
         val messageEvent = MessageEvent(message)
-        messageEventPublisher.publish(messageEvent)
+        chatEventPublishers.messages.publish(messageEvent)
     }
 
     private fun thenTheBotSays(message: String) {
@@ -43,13 +44,12 @@ class APingPongFeature {
 
     private fun configureMocks() {
         chatService = mock()
-        pingPongFeature = PingPong(chatService)
-
-        messageEventPublisher = EventPublisher<MessageEvent>()
-        messageEventPublisher.subscribe(pingPongFeature)
+        chatEventPublishers = ChatEventPublishers()
+        pingPongFeature = PingPongFeature(chatService, chatEventPublishers)
+        pingPongFeature.configure()
     }
 
     private lateinit var chatService: ChatService
-    private lateinit var messageEventPublisher: EventPublisher<MessageEvent>
-    private lateinit var pingPongFeature: PingPong
+    private lateinit var chatEventPublishers: ChatEventPublishers
+    private lateinit var pingPongFeature: Feature
 }
