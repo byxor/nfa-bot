@@ -16,6 +16,4 @@ class DiscordChatService(private val discordApi: JDA) : ChatService {
     override fun sendMessage(message: String) {
         generalChannel.sendMessage(message).queue()
     }
-
-
 }
