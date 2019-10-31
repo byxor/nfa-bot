@@ -5,3 +5,6 @@
 build/
 .gradle/
 gradle/
+
+# Youtube API Secrets
+client_secret*
