@@ -31,3 +31,11 @@ java -jar discord/build/libs/NFA_Bot_Discord.jar
 #### Ping pong
 
 If you say "Ping!", the bot will say "Pong!". This is purely an experimental feature to get some of the architecture set up.
+
+#### Tetris
+
+If you say "tetris", the bot will say "Boom, tetris for <username>!". This is just a meme that will be switched off when the real bot is deployed.
+
+#### THUG Pro Plus
+
+If you say "!thugproplus", the bot will give you a download link for the latest version of the mod.
