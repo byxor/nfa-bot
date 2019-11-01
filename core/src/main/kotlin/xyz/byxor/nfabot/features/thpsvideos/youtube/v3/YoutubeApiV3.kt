@@ -7,6 +7,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
 import com.google.api.client.json.jackson2.JacksonFactory
 import com.google.api.services.youtube.YouTube
+import com.google.api.services.youtube.model.PlaylistItemListResponse
 import xyz.byxor.nfabot.features.thpsvideos.youtube.Video
 import xyz.byxor.nfabot.features.thpsvideos.youtube.YoutubeApi
 import java.io.FileInputStream
@@ -39,38 +40,44 @@ class YoutubeApiV3 : YoutubeApi {
                 .build()
     }
 
-    override fun getAllVideosInPlaylist(playlistId: String): List<Video> {
-        return getRemainingVideosInPlaylist(playlistId, "")
-    }
+    override fun getAllVideosInPlaylist(playlistId: String) = getRemainingVideosInPlaylist(playlistId)
 
-    private fun getRemainingVideosInPlaylist(playlistId: String, pageToken: String): List<Video> {
-        val request = when(pageToken) {
-            "" -> newPlaylistRequest(playlistId)
-            else -> newPlaylistRequest(playlistId).setPageToken(pageToken)
-        }
+    private fun getRemainingVideosInPlaylist(playlistId: String, pageToken: String = ""): List<Video> {
+        val request = createPlaylistRequest(playlistId, pageToken)
 
-        val response = request.execute()
+        val (videosOnThisPage, morePagesExist, nextPageToken) = request.extractVideosAndNextPageInformation()
 
-        val videosOnPage = response.items.map { item ->
-            Video(item.contentDetails.videoId)
-        }
-
-        val morePagesExist = response.nextPageToken != null
         return if (morePagesExist) {
-            concatenate(videosOnPage, getRemainingVideosInPlaylist(playlistId, response.nextPageToken))
+            val videosOnLaterPages = getRemainingVideosInPlaylist(playlistId, nextPageToken)
+            concatenate(videosOnThisPage, videosOnLaterPages)
         } else {
-            videosOnPage
+            videosOnThisPage
         }
     }
+
+    private fun createPlaylistRequest(playlistId: String, pageToken: String) = service
+                .playlistItems()
+                .list("contentDetails")
+                .setMaxResults(50L)
+                .setPlaylistId(playlistId)
+                .setPageToken(pageToken)
+
+    private fun PlaylistRequest.extractVideosAndNextPageInformation(): Triple<List<Video>, Boolean, String> {
+        val response = this.execute()
+        return Triple(response.getVideos(), response.morePagesExist(), response.nextPageToken)
+    }
+
+    private fun PlaylistItemListResponse.getVideos() = items.map { playlistItem ->
+        Video(playlistItem.contentDetails.videoId)
+    }
+
+    private fun PlaylistItemListResponse.morePagesExist() = nextPageToken != null
 
     private fun concatenate(a: List<Video>, b: List<Video>) = listOf(
             *a.toTypedArray(),
             *b.toTypedArray()
     )
-
-    private fun newPlaylistRequest(playlistId: String) = service
-            .playlistItems()
-            .list("contentDetails")
-            .setMaxResults(50L)
-            .setPlaylistId(playlistId)
 }
+
+private typealias PlaylistRequest = YouTube.PlaylistItems.List
+private typealias PlaylistResponse = PlaylistItemListResponse
