@@ -14,8 +14,8 @@ import java.io.InputStreamReader
 
 class YoutubeApiV3 : YoutubeApi {
 
-    private val APPLICATION_NAME = "NFA Bot"
-    private val SECRET_PATH = "/home/brandon/Documents/youtube_client_secret.json"
+    private val applicationName = "NFA Bot"
+    private val secretPath = "/home/brandon/Documents/youtube_client_secret.json"
 
     private lateinit var service: YouTube
 
@@ -29,25 +29,48 @@ class YoutubeApiV3 : YoutubeApi {
 
         val httpTransport = GoogleNetHttpTransport.newTrustedTransport()
 
-
-
-        val secrets = GoogleClientSecrets.load(jsonFactory, InputStreamReader(FileInputStream(SECRET_PATH)))
+        val secrets = GoogleClientSecrets.load(jsonFactory, InputStreamReader(FileInputStream(secretPath)))
         val flow = GoogleAuthorizationCodeFlow.Builder(httpTransport, jsonFactory, secrets, scopes).build()
 
         val credential = AuthorizationCodeInstalledApp(flow, LocalServerReceiver()).authorize("user")
 
         service = YouTube.Builder(httpTransport, jsonFactory, credential)
-                .setApplicationName(APPLICATION_NAME)
+                .setApplicationName(applicationName)
                 .build()
     }
 
     override fun getAllVideosInPlaylist(playlistId: String): List<Video> {
-        val request = service.playlistItems().list("contentDetails")
-        val response = request.setMaxResults(50)
-                .setPlaylistId(playlistId)
-                .execute()
-        println(response)
-        return listOf()
+        return getRemainingVideosInPlaylist(playlistId, "")
     }
 
+    private fun getRemainingVideosInPlaylist(playlistId: String, pageToken: String): List<Video> {
+        val request = when(pageToken) {
+            "" -> newPlaylistRequest(playlistId)
+            else -> newPlaylistRequest(playlistId).setPageToken(pageToken)
+        }
+
+        val response = request.execute()
+
+        val videosOnPage = response.items.map { item ->
+            Video(item.contentDetails.videoId)
+        }
+
+        val morePagesExist = response.nextPageToken != null
+        return if (morePagesExist) {
+            concatenate(videosOnPage, getRemainingVideosInPlaylist(playlistId, response.nextPageToken))
+        } else {
+            videosOnPage
+        }
+    }
+
+    private fun concatenate(a: List<Video>, b: List<Video>) = listOf(
+            *a.toTypedArray(),
+            *b.toTypedArray()
+    )
+
+    private fun newPlaylistRequest(playlistId: String) = service
+            .playlistItems()
+            .list("contentDetails")
+            .setMaxResults(50L)
+            .setPlaylistId(playlistId)
 }
