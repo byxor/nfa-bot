@@ -34,7 +34,7 @@ If you say `"Ping!"`, the bot will say `"Pong!"`. This is purely an experimental
 
 #### Tetris
 
-If you say `"tetris"`, the bot will say `"Boom, tetris for <username>!"`. This is just a meme that will be switched off when the real bot is deployed.
+If you say `"!tetris"`, the bot will say `"Boom, tetris for <username>!"`. This is just a meme that will be switched off when the real bot is deployed.
 
 #### THUG Pro Plus
 
