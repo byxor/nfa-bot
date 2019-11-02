@@ -39,3 +39,7 @@ If you say `"!tetris"`, the bot will say `"Boom, tetris for <username>!"`. This 
 #### THUG Pro Plus
 
 If you say `"!thugproplus"`, the bot will give you a download link for the latest version of the mod.
+
+#### THPS Videos
+
+If you say `"!thpsvideo"`, the bot will serve up a random video from the [THPSVideos YouTube Channel](https://www.youtube.com/THPSVideos).
