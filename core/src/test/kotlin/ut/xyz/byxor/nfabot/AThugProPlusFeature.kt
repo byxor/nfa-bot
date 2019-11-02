@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Before
 import org.junit.Test
+import ut.xyz.byxor.nfabot.mocks.MockChatService
 import xyz.byxor.nfabot.chat.ChatEventPublishers
 import xyz.byxor.nfabot.chat.ChatService
 import xyz.byxor.nfabot.chat.MessageEvent
@@ -53,12 +54,4 @@ class AThugProPlusFeature {
     private lateinit var chatEventPublishers: ChatEventPublishers
 
     private lateinit var thugProPlusFeature: ThugProPlusFeature
-}
-
-class MockChatService : ChatService {
-    var message: String = ""
-
-    override fun sendMessage(message: String) {
-        this.message = message
-    }
 }
