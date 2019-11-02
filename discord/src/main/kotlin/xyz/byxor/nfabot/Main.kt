@@ -6,6 +6,9 @@ import xyz.byxor.nfabot.features.Feature
 import xyz.byxor.nfabot.features.PingPongFeature
 import xyz.byxor.nfabot.features.TetrisFeature
 import xyz.byxor.nfabot.features.ThugProPlusFeature
+import xyz.byxor.nfabot.features.thpsvideos.ThpsVideosFeature
+import xyz.byxor.nfabot.features.thpsvideos.youtube.v3.YoutubeApiV3
+import xyz.byxor.nfabot.random.RandomImplementation
 
 fun main(args: Array<String>) {
     val token = args[0]
@@ -21,10 +24,14 @@ fun main(args: Array<String>) {
 
     val discordChatService = DiscordChatService(discordApi)
 
+    val random = RandomImplementation()
+    val youtubeApi = YoutubeApiV3()
+
     val features = listOf<Feature>(
             PingPongFeature(discordChatService, chatEventPublishers),
             ThugProPlusFeature(discordChatService, chatEventPublishers),
-            TetrisFeature(discordChatService, chatEventPublishers)
+            TetrisFeature(discordChatService, chatEventPublishers),
+            ThpsVideosFeature(discordChatService, chatEventPublishers, random, youtubeApi)
     )
 
     features.forEach {
