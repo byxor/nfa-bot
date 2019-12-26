@@ -29,7 +29,7 @@ class ThpsVideosFeature(
         if (event.message == "!thpsvideo") {
             val videos = getVideos()
             val video = videos[random.index(videos.size)]
-            chatService.sendMessage(video.getUrl())
+            chatService.sendMessage(video.getUrl(), event.channel)
         }
     }
 

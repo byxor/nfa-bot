@@ -1,11 +1,8 @@
 package ut.xyz.byxor.nfabot;
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.verify
 import org.junit.Before
 import org.junit.Test
+import ut.xyz.byxor.nfabot.mocks.MockChatService
 import xyz.byxor.nfabot.chat.ChatEventPublishers
 import xyz.byxor.nfabot.chat.ChatService
 import xyz.byxor.nfabot.chat.MessageEvent
@@ -35,21 +32,21 @@ class APingPongFeature {
     }
 
     private fun thenTheBotSays(message: String) {
-        verify(chatService).sendMessage(message)
+        assert(chatService.message == message)
     }
 
     private fun thenTheBotSaysNothing() {
-        verify(chatService, never()).sendMessage(any())
+        assert(chatService.message.isEmpty())
     }
 
     private fun configureMocks() {
-        chatService = mock()
+        chatService = MockChatService()
         chatEventPublishers = ChatEventPublishers()
         pingPongFeature = PingPongFeature(chatService, chatEventPublishers)
         pingPongFeature.configure()
     }
 
-    private lateinit var chatService: ChatService
+    private lateinit var chatService: MockChatService
     private lateinit var chatEventPublishers: ChatEventPublishers
     private lateinit var pingPongFeature: Feature
 }

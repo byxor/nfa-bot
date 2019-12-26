@@ -3,7 +3,6 @@ package ut.xyz.byxor.nfabot;
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import org.junit.Before
 import org.junit.Test;
 import org.junit.runner.RunWith
@@ -43,18 +42,27 @@ class AThpsVideosFeature(
         thenTheBotSaysNothing()
     }
 
+    @Test
+    fun `Should respond in the channel where the command was posted`() {
+        givenVideoWillBeChosen(predeterminedVideoIndex)
+        whenSomebodySays("!thpsvideo", "custom_channel")
+        thenBotPostsVideo(predeterminedVideoIndex, "custom_channel")
+    }
+
     private fun givenVideoWillBeChosen(index: Int) {
         given(random.index(any())).willReturn(index)
     }
 
-    private fun whenSomebodySays(message: String) {
-        val messageEvent = MessageEvent(message, "author")
+    private fun whenSomebodySays(message: String, channel: String = "general") {
+        val messageEvent = MessageEvent(message, "author", channel)
         chatEventPublishers.messages.publish(messageEvent)
     }
 
-    private fun thenBotPostsVideo(predeterminedVideoIndex: Int) {
+    private fun thenBotPostsVideo(predeterminedVideoIndex: Int, expectedChannel: String = "general") {
         val video = videos[predeterminedVideoIndex]
         assert(chatService.message.contains(video.getUrl()))
+        println("${chatService.channel} $expectedChannel")
+        assert(chatService.channel == expectedChannel)
     }
 
     private fun thenTheBotSaysNothing() {
